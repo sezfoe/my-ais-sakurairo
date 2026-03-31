@@ -122,7 +122,7 @@ const Beat: React.FC<{ notes: string[] }> = ({ notes }) => {
   const isGrouped = notes.length >= 2;
   
   return (
-    <div className="relative flex flex-col items-center justify-center px-0.5 min-w-[32px] md:min-w-[36px] h-10">
+    <div className="relative flex flex-col items-center justify-center px-0.5 min-w-[32px] md:min-w-[36px] h-10 text-black">
       <div className="flex items-center gap-0 text-base md:text-lg font-medium leading-none">
         {notes.map((note, i) => {
           const hasFlat = note.includes('b');
@@ -142,7 +142,7 @@ const Beat: React.FC<{ notes: string[] }> = ({ notes }) => {
         })}
       </div>
       {isGrouped && (
-        <div className="absolute bottom-1.5 left-0.5 right-0.5 h-[2px] bg-[#5A5A40] rounded-full" />
+        <div className="absolute bottom-1.5 left-0.5 right-0.5 h-[2px] bg-black rounded-full" />
       )}
     </div>
   );
@@ -150,7 +150,7 @@ const Beat: React.FC<{ notes: string[] }> = ({ notes }) => {
 
 const Measure: React.FC<{ beats: string[][]; index: number }> = ({ beats }) => {
   return (
-    <div className="relative flex items-center border-r border-stone-400 py-2 px-1 justify-center w-full h-full">
+    <div className="relative flex items-center border-r border-black py-2 px-1 justify-center w-full h-full">
       <div className="flex items-center gap-0.5">
         {beats.map((beat, i) => (
           <Beat key={i} notes={beat} />
@@ -168,9 +168,9 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f5f5f0] text-[#5A5A40] font-serif selection:bg-stone-200 selection:text-stone-800">
+    <div className="min-h-screen bg-[#f5f5f0] text-black font-serif selection:bg-stone-200 selection:text-stone-800">
       {/* Header */}
-      <header className="max-w-5xl mx-auto pt-16 pb-12 px-6 text-center">
+      <header className="max-w-5xl mx-auto pt-8 pb-4 px-6 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -188,10 +188,10 @@ export default function App() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-white rounded-[40px] shadow-sm border border-stone-200 overflow-hidden"
+          className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden"
         >
-          <div className="p-6 md:p-12">
-            <div className="space-y-8">
+          <div className="p-6 md:p-10">
+            <div className="space-y-5">
               {sectionsToRender.map((sectionKey) => {
                 const currentSection = SCORE_DATA.sections[sectionKey as keyof typeof SCORE_DATA.sections];
                 
@@ -217,7 +217,7 @@ export default function App() {
                   <div key={sectionKey} className="space-y-2">
                     {/* Section Header */}
                     <div className="flex items-center gap-4">
-                      <span className="text-3xl font-bold text-stone-800 uppercase font-serif">
+                      <span className="text-xl font-bold text-black uppercase font-serif">
                         {getSectionLabel(sectionKey)}
                       </span>
                       <div className="h-[1px] flex-1 bg-stone-100" />
@@ -226,7 +226,7 @@ export default function App() {
                     <div className="space-y-0 overflow-x-auto custom-scrollbar">
                       {rows.map((rowObj, rowIdx) => (
                         <div key={rowIdx} className="relative min-w-[800px] lg:min-w-full">
-                          <div className="grid grid-cols-8 border-l border-stone-400">
+                          <div className="grid grid-cols-8 border-l border-black">
                             {rowObj.isPickup ? (
                               <>
                                 <Measure 
@@ -262,24 +262,24 @@ export default function App() {
             </div>
 
             {/* Legend & Info */}
-            <div className="mt-20 pt-8 border-t border-stone-100 flex flex-col gap-5">
+            <div className="mt-12 pt-8 border-t border-stone-100 flex flex-col gap-5">
               <div className="flex flex-wrap items-center gap-3 text-base tracking-widest">
-                <span className="text-xs uppercase tracking-[0.2em] text-stone-400 font-sans mr-2">演奏曲序:</span>
+                <span className="text-xs uppercase tracking-[0.2em] text-black font-sans mr-2">演奏曲序:</span>
                 {SCORE_DATA.sequence.map((s, i) => (
                   <React.Fragment key={i}>
-                    <span className="text-[#5A5A40] font-semibold uppercase">
+                    <span className="text-black font-semibold uppercase">
                       {getSectionLabel(s)}
                     </span>
                     {i < SCORE_DATA.sequence.length - 1 && (
-                      <span className="text-stone-300 text-sm">→</span>
+                      <span className="text-black/30 text-sm">→</span>
                     )}
                   </React.Fragment>
                 ))}
               </div>
               {SCORE_DATA.demoUrl && (
-                <div className="text-sm text-stone-400 tracking-wider">
-                  <span className="text-xs uppercase tracking-[0.2em] text-stone-400 font-sans mr-2">參考資料:</span>
-                  <a href={SCORE_DATA.demoUrl} target="_blank" rel="noopener noreferrer" className="hover:text-stone-600 transition-colors break-all underline underline-offset-4 decoration-stone-200">
+                <div className="text-sm text-black tracking-wider">
+                  <span className="text-xs uppercase tracking-[0.2em] text-black font-sans mr-2">參考資料:</span>
+                  <a href={SCORE_DATA.demoUrl} target="_blank" rel="noopener noreferrer" className="hover:text-stone-600 transition-colors break-all underline underline-offset-4 decoration-black/20">
                     {SCORE_DATA.demoUrl}
                   </a>
                 </div>
