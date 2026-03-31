@@ -125,11 +125,22 @@ const Beat: React.FC<{ notes: string[] }> = ({ notes }) => {
   return (
     <div className="relative flex flex-col items-center justify-center px-0.5 min-w-[32px] md:min-w-[36px] h-10">
       <div className="flex items-center gap-0 text-base md:text-lg font-medium leading-none">
-        {notes.map((note, i) => (
-          <span key={i} className="inline-flex items-center justify-center w-[1em]">
-            {toFullWidth(note)}
-          </span>
-        ))}
+        {notes.map((note, i) => {
+          const hasFlat = note.includes('b');
+          const baseNote = note.replace('b', '');
+          const displayBase = toFullWidth(baseNote);
+          
+          return (
+            <span key={i} className="relative inline-flex items-center justify-center w-[1em]">
+              {hasFlat && (
+                <span className="absolute -top-7 left-0 right-0 text-center font-normal text-lg md:text-xl">
+                  {SCORE_DATA.notationMap["b"]}
+                </span>
+              )}
+              {displayBase}
+            </span>
+          );
+        })}
       </div>
       {isGrouped && (
         <div className="absolute bottom-1.5 left-0.5 right-0.5 h-[2px] bg-[#5A5A40] rounded-full" />
