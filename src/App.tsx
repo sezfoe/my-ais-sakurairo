@@ -217,7 +217,7 @@ export default function App() {
                   <div key={sectionKey} className="space-y-2">
                     {/* Section Header */}
                     <div className="flex items-center gap-4">
-                      <span className="text-xl font-bold text-black uppercase font-serif">
+                      <span className="text-2xl font-bold text-black uppercase font-serif">
                         {getSectionLabel(sectionKey)}
                       </span>
                       <div className="h-[1px] flex-1 bg-stone-100" />
