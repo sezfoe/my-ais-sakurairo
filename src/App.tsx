@@ -5,12 +5,10 @@
 
 import React from "react";
 import { motion } from "motion/react";
-import { Music } from "lucide-react";
 
 // Score data with strict 3-beat structure and notation rules
 const SCORE_DATA = {
   title: "桜色のワルツ",
-  subtitle: "Sakura-iro no Waltz (Cherry Blossom Waltz)",
   demoUrl: "https://youtu.be/DT5Bmm4MsKo",
   sequence: ["a", "b", "c", "d", "e", "f", "a", "b", "c", "d", "e", "outro"],
   sectionLabels: {
@@ -178,12 +176,9 @@ export default function App() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className="text-5xl md:text-7xl font-light tracking-tighter mb-2">
+          <h1 className="text-5xl md:text-7xl font-light tracking-tighter">
             {SCORE_DATA.title}
           </h1>
-          <p className="text-stone-500 italic text-sm md:text-base tracking-widest uppercase">
-            {SCORE_DATA.subtitle}
-          </p>
         </motion.div>
       </header>
 
@@ -196,11 +191,6 @@ export default function App() {
           className="bg-white rounded-[40px] shadow-sm border border-stone-200 overflow-hidden"
         >
           <div className="p-6 md:p-12">
-            <div className="flex items-center gap-3 mb-10">
-              <Music className="text-stone-300" size={24} />
-              <h2 className="text-2xl italic uppercase tracking-[0.2em]">Complete Score</h2>
-            </div>
-
             <div className="space-y-8">
               {sectionsToRender.map((sectionKey) => {
                 const currentSection = SCORE_DATA.sections[sectionKey as keyof typeof SCORE_DATA.sections];
@@ -272,52 +262,32 @@ export default function App() {
             </div>
 
             {/* Legend & Info */}
-            <div className="mt-20 pt-8 border-t border-stone-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-              <div className="text-sm text-stone-400 italic leading-relaxed">
-                * 數字 (１-７) 代表高音 (甲音/大甲)，漢字 (四-七) 代表低音 (呂音/乾音)。
-                <br />
-                * 底線表示八分音符分組，逗號 (，) 代表半拍停頓，圓圈 (。) 代表一拍停頓。
+            <div className="mt-20 pt-8 border-t border-stone-100 flex flex-col gap-5">
+              <div className="flex flex-wrap items-center gap-3 text-base tracking-widest">
+                <span className="text-xs uppercase tracking-[0.2em] text-stone-400 font-sans mr-2">演奏曲序:</span>
+                {SCORE_DATA.sequence.map((s, i) => (
+                  <React.Fragment key={i}>
+                    <span className="text-[#5A5A40] font-semibold uppercase">
+                      {getSectionLabel(s)}
+                    </span>
+                    {i < SCORE_DATA.sequence.length - 1 && (
+                      <span className="text-stone-300 text-sm">→</span>
+                    )}
+                  </React.Fragment>
+                ))}
               </div>
-              <div className="text-xs font-sans tracking-[0.3em] text-stone-300 uppercase">
-                Shinobue Notation • 3/4 Waltz
-              </div>
+              {SCORE_DATA.demoUrl && (
+                <div className="text-sm text-stone-400 tracking-wider">
+                  <span className="text-xs uppercase tracking-[0.2em] text-stone-400 font-sans mr-2">參考資料:</span>
+                  <a href={SCORE_DATA.demoUrl} target="_blank" rel="noopener noreferrer" className="hover:text-stone-600 transition-colors break-all underline underline-offset-4 decoration-stone-200">
+                    {SCORE_DATA.demoUrl}
+                  </a>
+                </div>
+              )}
             </div>
           </div>
         </motion.div>
-
-        {/* Full Sequence Guide */}
-        <div className="mt-16 text-center">
-          <div className="inline-block px-8 py-6 bg-stone-100 rounded-3xl border border-stone-200 shadow-inner">
-            <span className="text-[10px] uppercase tracking-[0.2em] text-stone-400 font-sans block mb-3">Full Performance Order</span>
-            <div className="flex flex-wrap items-center justify-center gap-3 text-lg tracking-widest">
-              {SCORE_DATA.sequence.map((s, i) => (
-                <React.Fragment key={i}>
-                  <span className="text-[#5A5A40] font-medium uppercase">
-                    {getSectionLabel(s)}
-                  </span>
-                  {i < SCORE_DATA.sequence.length - 1 && (
-                    <span className="text-stone-300 text-xs">→</span>
-                  )}
-                </React.Fragment>
-              ))}
-            </div>
-          </div>
-        </div>
       </main>
-
-      {/* Footer */}
-      <footer className="max-w-5xl mx-auto py-16 px-6 border-t border-stone-200 text-center">
-        {SCORE_DATA.demoUrl && (
-          <p className="text-stone-400 text-xs tracking-widest uppercase mb-4">
-            參考資料: <a href={SCORE_DATA.demoUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-stone-600 transition-colors">YouTube 演奏參考</a>
-          </p>
-        )}
-        <div className="flex justify-center gap-8">
-          <div className="text-[10px] uppercase tracking-widest text-stone-300">
-            Designed for Shinobue Players • Sakura-iro no Waltz
-          </div>
-        </div>
-      </footer>
 
       <style dangerouslySetInnerHTML={{ __html: `
         .custom-scrollbar::-webkit-scrollbar {
