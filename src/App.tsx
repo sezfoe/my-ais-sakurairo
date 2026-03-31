@@ -148,9 +148,9 @@ const Beat: React.FC<{ notes: string[] }> = ({ notes }) => {
   );
 };
 
-const Measure: React.FC<{ beats: string[][]; index: number }> = ({ beats }) => {
+const Measure: React.FC<{ beats: string[][]; index: number; isPickup?: boolean }> = ({ beats, isPickup }) => {
   return (
-    <div className="relative flex items-center border-r border-black py-2 px-1 justify-center w-full h-full">
+    <div className={`relative flex items-center border-r border-black py-2 px-2 ${isPickup ? 'justify-start' : 'justify-center'} w-full h-full`}>
       <div className="flex items-center gap-0.5">
         {beats.map((beat, i) => (
           <Beat key={i} notes={beat} />
@@ -232,6 +232,7 @@ export default function App() {
                                 <Measure 
                                   beats={rowObj.measures[0]} 
                                   index={0} 
+                                  isPickup={true}
                                 />
                                 {Array.from({ length: 7 }).map((_, i) => (
                                   <div key={`empty-${i}`} className="border-r border-stone-200 w-full h-full" />
