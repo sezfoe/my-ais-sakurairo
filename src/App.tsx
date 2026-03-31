@@ -176,7 +176,7 @@ export default function App() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className="text-5xl md:text-7xl font-light tracking-tighter">
+          <h1 className="text-4xl md:text-5xl font-light tracking-tighter">
             {SCORE_DATA.title}
           </h1>
         </motion.div>
