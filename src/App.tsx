@@ -176,7 +176,7 @@ export default function App() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className="text-4xl md:text-5xl font-light tracking-tighter">
+          <h1 className="text-3xl md:text-4xl font-light tracking-tighter">
             {SCORE_DATA.title}
           </h1>
         </motion.div>
@@ -263,9 +263,9 @@ export default function App() {
             </div>
 
             {/* Legend & Info */}
-            <div className="mt-12 pt-8 border-t border-stone-100 flex flex-col gap-5">
-              <div className="flex flex-wrap items-center gap-3 text-base tracking-widest">
-                <span className="text-xs uppercase tracking-[0.2em] text-black font-sans mr-2">演奏曲序:</span>
+            <div className="mt-12 pt-8 border-t border-stone-100 flex flex-col gap-3 leading-tight">
+              <div className="flex flex-wrap items-center gap-3 text-lg tracking-widest">
+                <span className="text-sm uppercase tracking-[0.2em] text-black font-sans mr-2">演奏曲序:</span>
                 {SCORE_DATA.sequence.map((s, i) => (
                   <React.Fragment key={i}>
                     <span className="text-black font-semibold uppercase">
@@ -278,8 +278,8 @@ export default function App() {
                 ))}
               </div>
               {SCORE_DATA.demoUrl && (
-                <div className="text-sm text-black tracking-wider">
-                  <span className="text-xs uppercase tracking-[0.2em] text-black font-sans mr-2">參考資料:</span>
+                <div className="text-lg text-black tracking-wider">
+                  <span className="text-sm uppercase tracking-[0.2em] text-black font-sans mr-2">參考資料:</span>
                   <a href={SCORE_DATA.demoUrl} target="_blank" rel="noopener noreferrer" className="hover:text-stone-600 transition-colors break-all underline underline-offset-4 decoration-black/20">
                     {SCORE_DATA.demoUrl}
                   </a>
