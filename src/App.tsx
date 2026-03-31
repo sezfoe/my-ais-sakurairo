@@ -152,7 +152,7 @@ const Beat: React.FC<{ notes: string[] }> = ({ notes }) => {
 
 const Measure: React.FC<{ beats: string[][]; index: number }> = ({ beats }) => {
   return (
-    <div className="relative flex items-center border-r border-stone-400 py-6 px-1 justify-center w-full h-full">
+    <div className="relative flex items-center border-r border-stone-400 py-2 px-1 justify-center w-full h-full">
       <div className="flex items-center gap-0.5">
         {beats.map((beat, i) => (
           <Beat key={i} notes={beat} />
@@ -201,7 +201,7 @@ export default function App() {
               <h2 className="text-2xl italic uppercase tracking-[0.2em]">Complete Score</h2>
             </div>
 
-            <div className="space-y-12">
+            <div className="space-y-8">
               {sectionsToRender.map((sectionKey) => {
                 const currentSection = SCORE_DATA.sections[sectionKey as keyof typeof SCORE_DATA.sections];
                 
@@ -224,7 +224,7 @@ export default function App() {
                 }
 
                 return (
-                  <div key={sectionKey} className="space-y-4">
+                  <div key={sectionKey} className="space-y-2">
                     {/* Section Header */}
                     <div className="flex items-center gap-4">
                       <span className="text-3xl font-bold text-stone-800 uppercase font-serif">
