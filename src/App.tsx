@@ -294,39 +294,66 @@ export default function App() {
         @media print {
           @page {
             size: A4 portrait;
-            margin: 0; /* 移除邊距 */
+            margin: 15mm 10mm;
           }
           body {
-            background-color: yellow !important; /* 極端：黃色背景 */
+            background-color: white !important;
             -webkit-print-color-adjust: exact;
           }
+          .min-h-screen {
+            background-color: white !important;
+            min-height: auto !important;
+          }
+          header, main {
+            max-width: 100% !important;
+            padding-top: 0 !important;
+            margin: 0 !important;
+          }
           h1 {
-            font-size: 80px !important; /* 極端：巨大標題 */
-            color: purple !important;   /* 極端：紫色標題 */
-            margin-bottom: 50px !important;
+            font-size: 28pt !important;
+            margin-bottom: 1rem !important;
+            color: black !important;
           }
-          /* 強制小節線變成粗綠色，且寬度極窄以觀察文字溢出 */
-          .border-r.border-black {
-            border: 10px solid lime !important; 
-            width: 40px !important; 
-            min-width: 40px !important;
-            overflow: visible !important;
+          /* Force exactly 8 equal columns */
+          .grid-cols-8 {
+            display: grid !important;
+            grid-template-columns: repeat(8, 12.5%) !important;
+            width: 100% !important;
+            min-width: 0 !important;
+            border-bottom: 1px solid black !important;
           }
-          /* 強制音符變成紅色且巨大 */
-          span, .text-base, .md\:text-lg {
-            color: red !important;
-            font-size: 40px !important;
-            font-weight: bold !important;
+          /* Ensure measures don't grow based on content */
+          .relative.flex.items-center.border-r.border-black {
+            width: 100% !important;
+            min-width: 0 !important;
+            overflow: hidden !important;
+            padding: 4px 2px !important;
+          }
+          /* Shrink notes to fit */
+          .text-base, .md\:text-lg {
+            font-size: 11pt !important;
+            letter-spacing: -0.02em !important;
             white-space: nowrap !important;
           }
-          /* 隱藏底部所有資訊 */
-          .mt-12 {
-            display: none !important;
+          /* Reduce gaps between beats */
+          .flex.items-center.gap-0\.5 {
+            gap: 1px !important;
           }
-          .grid-cols-8 {
-            display: flex !important;
-            flex-wrap: nowrap !important;
-            border: 20px solid blue !important; /* 藍色大外框 */
+          /* Remove minimum width constraints for print */
+          .min-w-\[32px\], .md\:min-w-\[36px\] {
+            min-width: 0 !important;
+          }
+          /* Hide scrollbars */
+          .custom-scrollbar, .overflow-x-auto {
+            overflow: visible !important;
+          }
+          /* Adjust legend spacing */
+          .mt-12 {
+            margin-top: 1.5rem !important;
+            padding-top: 1rem !important;
+          }
+          .text-lg {
+            font-size: 12pt !important;
           }
         }
 
