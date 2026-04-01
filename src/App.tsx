@@ -315,9 +315,25 @@ export default function App() {
           /* Prevent squeezing by ensuring the grid has enough space */
           .grid-cols-8 {
             display: grid !important;
-            grid-template-columns: repeat(8, 1fr) !important;
+            grid-template-columns: repeat(8, 12.5%) !important; /* Force exact 1/8 width */
             width: 100% !important;
             min-width: 0 !important;
+            table-layout: fixed !important;
+          }
+          /* Force beats to shrink to fit their container in print */
+          .min-w-\[32px\], .md\:min-w-\[36px\] {
+            min-width: 0 !important;
+            padding-left: 1px !important;
+            padding-right: 1px !important;
+          }
+          /* Reduce padding in measures for print */
+          .px-2 {
+            padding-left: 2px !important;
+            padding-right: 2px !important;
+          }
+          /* Slightly smaller notes for print to ensure fit */
+          .text-base, .md\:text-lg {
+            font-size: 14px !important;
           }
           /* Hide scrollbars and ensure content doesn't overflow */
           .custom-scrollbar {
