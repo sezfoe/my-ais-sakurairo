@@ -3,18 +3,27 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React from "react";
-import { motion } from "motion/react";
-import { SCORE_DATA } from "./scoreData";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { SCORE_DATA as score001 } from "./score001";
+import { SCORE_DATA as score002 } from "./score002";
+
+// List of available scores
+const SCORE_LIST = [
+  "浜辺の歌",
+  "桜色のワルツ"
+];
+
+// Registry to map filenames to their data
+const SCORE_REGISTRY: Record<string, any> = {
+  "浜辺の歌": score001,
+  "桜色のワルツ": score002
+};
 
 // Helper to convert characters using the notation map
-const toFullWidth = (char: string) => {
-  if (!char) return SCORE_DATA.notationMap["-"];
-  
-  // Process each character through the map, fallback to original if not found
-  return char.split('').map(c => 
-    (SCORE_DATA.notationMap as Record<string, string>)[c] || c
-  ).join('');
+const toFullWidth = (char: string, notationMap: Record<string, string>) => {
+  if (!char) return notationMap["-"] || "。";
+  return char.split('').map(c => notationMap[c] || c).join('');
 };
 
 // Parser for the new string-based measure format
@@ -37,8 +46,7 @@ const parseMeasure = (measureStr: string): string[][] => {
   });
 };
 
-const Beat: React.FC<{ notes: string[] }> = ({ notes }) => {
-  // If notes array has 2 elements, it's an 8th note group (needs underline)
+const Beat: React.FC<{ notes: string[]; notationMap: Record<string, string> }> = ({ notes, notationMap }) => {
   const isGrouped = notes.length >= 2;
   
   return (
@@ -47,13 +55,13 @@ const Beat: React.FC<{ notes: string[] }> = ({ notes }) => {
         {notes.map((note, i) => {
           const hasFlat = note.includes('b');
           const baseNote = note.replace('b', '');
-          const displayBase = toFullWidth(baseNote);
+          const displayBase = toFullWidth(baseNote, notationMap);
           
           return (
             <span key={i} className="relative inline-flex items-center justify-center w-[1em]">
               {hasFlat && (
                 <span className="absolute -top-7 left-0 right-0 text-center font-normal text-lg md:text-xl">
-                  {SCORE_DATA.notationMap["b"]}
+                  {notationMap["b"]}
                 </span>
               )}
               {displayBase}
@@ -68,39 +76,65 @@ const Beat: React.FC<{ notes: string[] }> = ({ notes }) => {
   );
 };
 
-const Measure: React.FC<{ beats: string[][]; index: number }> = ({ beats }) => {
-  // A measure is considered "short" if it doesn't have the standard 3 beats
+const Measure: React.FC<{ beats: string[][]; index: number; notationMap: Record<string, string> }> = ({ beats, notationMap }) => {
   const isShortMeasure = beats.length < 3;
   
   return (
     <div className={`relative flex items-center border-r border-black py-2 px-2 ${isShortMeasure ? 'justify-start' : 'justify-center'} w-full h-full`}>
       <div className="flex items-center gap-0.5">
         {beats.map((beat, i) => (
-          <Beat key={i} notes={beat} />
+          <Beat key={i} notes={beat} notationMap={notationMap} />
         ))}
       </div>
     </div>
   );
 };
 
-export default function App() {
-  const sectionsToRender = Object.keys(SCORE_DATA.sections);
+const HomeView: React.FC<{ onSelect: (scoreKey: string) => void }> = ({ onSelect }) => {
+  return (
+    <div className="min-h-screen bg-[#f5f5f0] p-8 flex flex-col gap-4 items-start">
+      {SCORE_LIST.map((scoreName) => (
+        <motion.button
+          key={scoreName}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={() => onSelect(scoreName)}
+          className="px-6 py-3 bg-white text-black border border-stone-300 rounded-lg shadow-sm hover:bg-stone-50 transition-all text-sm font-medium tracking-wider uppercase"
+        >
+          {scoreName}
+        </motion.button>
+      ))}
+    </div>
+  );
+};
+
+const ScoreView: React.FC<{ scoreData: any; onBack: () => void }> = ({ scoreData, onBack }) => {
+  const sectionsToRender = Object.keys(scoreData.sections);
 
   const getSectionLabel = (key: string) => {
-    return SCORE_DATA.sectionLabels[key as keyof typeof SCORE_DATA.sectionLabels] || key;
+    return scoreData.sectionLabels[key as keyof typeof scoreData.sectionLabels] || key;
   };
 
   return (
     <div className="min-h-screen bg-[#f5f5f0] text-black font-serif selection:bg-stone-200 selection:text-stone-800">
       {/* Header */}
-      <header className="max-w-5xl mx-auto pt-8 pb-4 px-6 text-center">
+      <header className="max-w-5xl mx-auto pt-8 pb-4 px-6 relative">
+        <button 
+          onClick={onBack}
+          className="absolute left-6 top-10 p-2 hover:bg-stone-200 rounded-full transition-colors print:hidden"
+          title="Back to Home"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
+          className="text-center"
         >
           <h1 className="text-3xl md:text-4xl font-light tracking-tighter">
-            {SCORE_DATA.title}
+            {scoreData.title}
           </h1>
         </motion.div>
       </header>
@@ -116,13 +150,13 @@ export default function App() {
           <div className="p-6 md:p-10">
             <div className="space-y-5">
               {sectionsToRender.map((sectionKey) => {
-                const currentSection = SCORE_DATA.sections[sectionKey as keyof typeof SCORE_DATA.sections];
+                const currentSection = scoreData.sections[sectionKey as keyof typeof scoreData.sections];
                 
                 // Group measures into rows based on "\n" marker or 8-measure limit
                 const rows: { measures: string[] }[] = [];
                 let currentMeasures: string[] = [];
                 
-                currentSection.forEach((item) => {
+                currentSection.forEach((item: string) => {
                   if (item === "\n") {
                     if (currentMeasures.length > 0) {
                       rows.push({ measures: [...currentMeasures] });
@@ -161,6 +195,7 @@ export default function App() {
                                 key={mIdx} 
                                 beats={parseMeasure(measure)} 
                                 index={rowIdx * 8 + mIdx} 
+                                notationMap={scoreData.notationMap}
                               />
                             ))}
                             {/* Fill empty space in the row if less than 8 measures */}
@@ -180,22 +215,22 @@ export default function App() {
             <div className="mt-12 pt-8 border-t border-stone-100 flex flex-col gap-3 leading-tight">
               <div className="flex flex-wrap items-center gap-3 text-lg tracking-widest">
                 <span className="text-sm uppercase tracking-[0.2em] text-black font-sans mr-2">演奏曲序:</span>
-                {SCORE_DATA.sequence.map((s, i) => (
+                {scoreData.sequence.map((s: string, i: number) => (
                   <React.Fragment key={i}>
                     <span className="text-black font-semibold uppercase">
                       {getSectionLabel(s)}
                     </span>
-                    {i < SCORE_DATA.sequence.length - 1 && (
+                    {i < scoreData.sequence.length - 1 && (
                       <span className="text-black/30 text-sm">→</span>
                     )}
                   </React.Fragment>
                 ))}
               </div>
-              {SCORE_DATA.demoUrl && (
+              {scoreData.demoUrl && (
                 <div className="text-lg text-black tracking-wider">
                   <span className="text-sm uppercase tracking-[0.2em] text-black font-sans mr-2">參考資料:</span>
-                  <a href={SCORE_DATA.demoUrl} target="_blank" rel="noopener noreferrer" className="hover:text-stone-600 transition-colors break-all underline underline-offset-4 decoration-black/20">
-                    {SCORE_DATA.demoUrl}
+                  <a href={scoreData.demoUrl} target="_blank" rel="noopener noreferrer" className="hover:text-stone-600 transition-colors break-all underline underline-offset-4 decoration-black/20">
+                    {scoreData.demoUrl}
                   </a>
                 </div>
               )}
@@ -228,7 +263,6 @@ export default function App() {
             margin-bottom: 1rem !important;
             color: black !important;
           }
-          /* Force exactly 8 equal columns */
           .grid-cols-8 {
             display: grid !important;
             grid-template-columns: repeat(8, 12.5%) !important;
@@ -236,32 +270,26 @@ export default function App() {
             min-width: 0 !important;
             border-bottom: 1px solid black !important;
           }
-          /* Ensure measures don't grow based on content */
           .relative.flex.items-center.border-r.border-black {
             width: 100% !important;
             min-width: 0 !important;
             overflow: hidden !important;
             padding: 4px 2px !important;
           }
-          /* Shrink notes to fit */
           .text-base, .md\:text-lg {
             font-size: 11pt !important;
             letter-spacing: -0.02em !important;
             white-space: nowrap !important;
           }
-          /* Reduce gaps between beats */
           .flex.items-center.gap-0\.5 {
             gap: 1px !important;
           }
-          /* Remove minimum width constraints for print */
           .min-w-\[32px\], .md\:min-w-\[36px\] {
             min-width: 0 !important;
           }
-          /* Hide scrollbars */
           .custom-scrollbar, .overflow-x-auto {
             overflow: visible !important;
           }
-          /* Adjust legend spacing */
           .mt-12 {
             margin-top: 1.5rem !important;
             padding-top: 1rem !important;
@@ -287,5 +315,46 @@ export default function App() {
         }
       `}} />
     </div>
+  );
+};
+
+export default function App() {
+  const [selectedScore, setSelectedScore] = useState<string | null>(null);
+
+  const handleSelect = (scoreKey: string) => {
+    setSelectedScore(scoreKey);
+  };
+
+  const handleBack = () => {
+    setSelectedScore(null);
+  };
+
+  return (
+    <AnimatePresence mode="wait">
+      {!selectedScore ? (
+        <motion.div
+          key="home"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.5 }}
+        >
+          <HomeView onSelect={handleSelect} />
+        </motion.div>
+      ) : (
+        <motion.div
+          key="score"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <ScoreView 
+            scoreData={SCORE_REGISTRY[selectedScore]} 
+            onBack={handleBack} 
+          />
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
