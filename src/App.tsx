@@ -92,18 +92,20 @@ const Measure: React.FC<{ beats: string[][]; index: number; notationMap: Record<
 
 const HomeView: React.FC<{ onSelect: (scoreKey: string) => void }> = ({ onSelect }) => {
   return (
-    <div className="min-h-screen bg-[#f5f5f0] p-8 flex flex-col gap-4 items-start">
-      {SCORE_LIST.map((scoreName) => (
-        <motion.button
-          key={scoreName}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={() => onSelect(scoreName)}
-          className="px-6 py-3 bg-white text-black border border-stone-300 rounded-lg shadow-sm hover:bg-stone-50 transition-all text-sm font-medium tracking-wider uppercase"
-        >
-          {scoreName}
-        </motion.button>
-      ))}
+    <div className="min-h-screen bg-[#f5f5f0] p-8 flex flex-col gap-6 items-center justify-center">
+      <div className="flex flex-col gap-4 w-full max-w-xs">
+        {SCORE_LIST.map((scoreName) => (
+          <motion.button
+            key={scoreName}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => onSelect(scoreName)}
+            className="px-6 py-4 bg-white text-black border border-stone-300 rounded-xl shadow-sm hover:bg-stone-50 transition-all text-base font-medium tracking-widest uppercase text-center"
+          >
+            {scoreName}
+          </motion.button>
+        ))}
+      </div>
     </div>
   );
 };
@@ -268,7 +270,7 @@ const ScoreView: React.FC<{ scoreData: any; onBack: () => void }> = ({ scoreData
             grid-template-columns: repeat(8, 12.5%) !important;
             width: 100% !important;
             min-width: 0 !important;
-            border-bottom: 1px solid black !important;
+            border-bottom: none !important;
           }
           .relative.flex.items-center.border-r.border-black {
             width: 100% !important;
