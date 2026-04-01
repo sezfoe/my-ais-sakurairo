@@ -216,7 +216,7 @@ const ScoreView: React.FC<{ scoreData: any; onBack: () => void }> = ({ scoreData
             {/* Legend & Info */}
             <div className="mt-12 pt-8 border-t border-stone-100 flex flex-col gap-3 leading-tight">
               <div className="flex flex-wrap items-center gap-3 text-lg tracking-widest">
-                <span className="text-sm uppercase tracking-[0.2em] text-black font-sans mr-2">演奏曲序:</span>
+                <span className="text-sm uppercase tracking-[0.2em] text-black font-sans mr-2">演奏順序:</span>
                 {scoreData.sequence.map((s: string, i: number) => (
                   <React.Fragment key={i}>
                     <span className="text-black font-semibold uppercase">
