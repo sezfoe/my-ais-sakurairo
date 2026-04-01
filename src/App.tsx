@@ -294,72 +294,40 @@ export default function App() {
         @media print {
           @page {
             size: A4 portrait;
-            margin: 10mm;
+            margin: 0; /* 移除邊距 */
           }
           body {
-            background-color: white !important;
+            background-color: yellow !important; /* 極端：黃色背景 */
             -webkit-print-color-adjust: exact;
           }
-          .min-h-screen {
-            background-color: white !important;
-            min-height: auto !important;
+          h1 {
+            font-size: 80px !important; /* 極端：巨大標題 */
+            color: purple !important;   /* 極端：紫色標題 */
+            margin-bottom: 50px !important;
           }
-          header, main {
-            max-width: 100% !important;
-            padding-top: 0 !important;
-          }
-          .shadow-sm {
-            shadow: none !important;
-            box-shadow: none !important;
-          }
-          /* Prevent squeezing by ensuring the grid has enough space */
-          .grid-cols-8 {
-            display: grid !important;
-            grid-template-columns: repeat(8, 12.5%) !important; /* Force exact 1/8 width */
-            width: 100% !important;
-            min-width: 0 !important;
-            table-layout: fixed !important;
-          }
-          /* Force beats to shrink to fit their container in print */
-          .min-w-\[32px\], .md\:min-w-\[36px\] {
-            min-width: 0 !important;
-            padding-left: 1px !important;
-            padding-right: 1px !important;
-          }
-          /* Reduce padding in measures for print */
-          .px-2 {
-            padding-left: 2px !important;
-            padding-right: 2px !important;
-          }
-          /* Slightly smaller notes for print to ensure fit */
-          .text-base, .md\:text-lg {
-            font-size: 13px !important; /* Further reduced to ensure fit */
-            letter-spacing: -0.05em !important; /* Tighten characters */
-          }
-          /* Ensure the beat container itself can shrink */
-          .Beat_container, .flex.items-center.gap-0\.5 {
-            gap: 1px !important; /* Reduce gap between beats */
-          }
-          /* Force notes to stay in one line and not overflow */
-          span.relative.inline-flex {
-            width: auto !important;
-            min-width: 0.8em !important;
-          }
-          /* Hide scrollbars and ensure content doesn't overflow */
-          .custom-scrollbar {
+          /* 強制小節線變成粗綠色，且寬度極窄以觀察文字溢出 */
+          .border-r.border-black {
+            border: 10px solid lime !important; 
+            width: 40px !important; 
+            min-width: 40px !important;
             overflow: visible !important;
           }
-          .overflow-x-auto {
-            overflow: visible !important;
+          /* 強制音符變成紅色且巨大 */
+          span, .text-base, .md\:text-lg {
+            color: red !important;
+            font-size: 40px !important;
+            font-weight: bold !important;
+            white-space: nowrap !important;
           }
-          /* Ensure text is crisp and black */
-          h1, span, div, a {
-            color: black !important;
-          }
+          /* 隱藏底部所有資訊 */
           .mt-12 {
-            margin-top: 2rem !important;
+            display: none !important;
           }
-          /* Hide elements that shouldn't be printed if any (like buttons) */
+          .grid-cols-8 {
+            display: flex !important;
+            flex-wrap: nowrap !important;
+            border: 20px solid blue !important; /* 藍色大外框 */
+          }
         }
 
         .custom-scrollbar::-webkit-scrollbar {
