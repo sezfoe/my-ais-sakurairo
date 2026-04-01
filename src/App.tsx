@@ -291,6 +291,51 @@ export default function App() {
       </main>
 
       <style dangerouslySetInnerHTML={{ __html: `
+        @media print {
+          @page {
+            size: A4 portrait;
+            margin: 10mm;
+          }
+          body {
+            background-color: white !important;
+            -webkit-print-color-adjust: exact;
+          }
+          .min-h-screen {
+            background-color: white !important;
+            min-height: auto !important;
+          }
+          header, main {
+            max-width: 100% !important;
+            padding-top: 0 !important;
+          }
+          .shadow-sm {
+            shadow: none !important;
+            box-shadow: none !important;
+          }
+          /* Prevent squeezing by ensuring the grid has enough space */
+          .grid-cols-8 {
+            display: grid !important;
+            grid-template-columns: repeat(8, 1fr) !important;
+            width: 100% !important;
+            min-width: 0 !important;
+          }
+          /* Hide scrollbars and ensure content doesn't overflow */
+          .custom-scrollbar {
+            overflow: visible !important;
+          }
+          .overflow-x-auto {
+            overflow: visible !important;
+          }
+          /* Ensure text is crisp and black */
+          h1, span, div, a {
+            color: black !important;
+          }
+          .mt-12 {
+            margin-top: 2rem !important;
+          }
+          /* Hide elements that shouldn't be printed if any (like buttons) */
+        }
+
         .custom-scrollbar::-webkit-scrollbar {
           height: 4px;
         }
