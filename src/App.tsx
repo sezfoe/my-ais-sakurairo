@@ -68,9 +68,12 @@ const Beat: React.FC<{ notes: string[] }> = ({ notes }) => {
   );
 };
 
-const Measure: React.FC<{ beats: string[][]; index: number; isPickup?: boolean }> = ({ beats, isPickup }) => {
+const Measure: React.FC<{ beats: string[][]; index: number }> = ({ beats }) => {
+  // A measure is considered "short" if it doesn't have the standard 3 beats
+  const isShortMeasure = beats.length < 3;
+  
   return (
-    <div className={`relative flex items-center border-r border-black py-2 px-2 ${isPickup ? 'justify-start' : 'justify-center'} w-full h-full`}>
+    <div className={`relative flex items-center border-r border-black py-2 px-2 ${isShortMeasure ? 'justify-start' : 'justify-center'} w-full h-full`}>
       <div className="flex items-center gap-0.5">
         {beats.map((beat, i) => (
           <Beat key={i} notes={beat} />
@@ -115,22 +118,28 @@ export default function App() {
               {sectionsToRender.map((sectionKey) => {
                 const currentSection = SCORE_DATA.sections[sectionKey as keyof typeof SCORE_DATA.sections];
                 
-                // Group measures into rows
-                const rows = [];
-                const isPickupSection = SCORE_DATA.pickupSections.includes(sectionKey);
+                // Group measures into rows based on "\n" marker or 8-measure limit
+                const rows: { measures: string[] }[] = [];
+                let currentMeasures: string[] = [];
                 
-                if (isPickupSection) {
-                  // First measure is pickup, put it in the first row
-                  rows.push({ measures: currentSection.slice(0, 1), isPickup: true });
-                  // Remaining measures in groups of 8
-                  for (let i = 1; i < currentSection.length; i += 8) {
-                    rows.push({ measures: currentSection.slice(i, i + 8), isPickup: false });
+                currentSection.forEach((item) => {
+                  if (item === "\n") {
+                    if (currentMeasures.length > 0) {
+                      rows.push({ measures: [...currentMeasures] });
+                      currentMeasures = [];
+                    }
+                  } else {
+                    currentMeasures.push(item);
+                    if (currentMeasures.length === 8) {
+                      rows.push({ measures: [...currentMeasures] });
+                      currentMeasures = [];
+                    }
                   }
-                } else {
-                  // Standard grouping of 8 measures per row
-                  for (let i = 0; i < currentSection.length; i += 8) {
-                    rows.push({ measures: currentSection.slice(i, i + 8), isPickup: false });
-                  }
+                });
+                
+                // Add any remaining measures
+                if (currentMeasures.length > 0) {
+                  rows.push({ measures: [...currentMeasures] });
                 }
 
                 return (
@@ -147,32 +156,17 @@ export default function App() {
                       {rows.map((rowObj, rowIdx) => (
                         <div key={rowIdx} className="relative min-w-[800px] lg:min-w-full">
                           <div className="grid grid-cols-8 border-l border-black">
-                            {rowObj.isPickup ? (
-                              <>
-                                <Measure 
-                                  beats={parseMeasure(rowObj.measures[0])} 
-                                  index={0} 
-                                  isPickup={true}
-                                />
-                                {Array.from({ length: 7 }).map((_, i) => (
-                                  <div key={`empty-${i}`} className="border-r border-stone-200 w-full h-full" />
-                                ))}
-                              </>
-                            ) : (
-                              <>
-                                {rowObj.measures.map((measure, mIdx) => (
-                                  <Measure 
-                                    key={mIdx} 
-                                    beats={parseMeasure(measure)} 
-                                    index={rowIdx * 8 + mIdx} 
-                                  />
-                                ))}
-                                {/* Fill empty space in the row if less than 8 measures */}
-                                {rowObj.measures.length < 8 && Array.from({ length: 8 - rowObj.measures.length }).map((_, i) => (
-                                  <div key={`empty-${i}`} className="border-r border-stone-200 w-full h-full" />
-                                ))}
-                              </>
-                            )}
+                            {rowObj.measures.map((measure, mIdx) => (
+                              <Measure 
+                                key={mIdx} 
+                                beats={parseMeasure(measure)} 
+                                index={rowIdx * 8 + mIdx} 
+                              />
+                            ))}
+                            {/* Fill empty space in the row if less than 8 measures */}
+                            {rowObj.measures.length < 8 && Array.from({ length: 8 - rowObj.measures.length }).map((_, i) => (
+                              <div key={`empty-${i}`} className="border-r border-stone-200 w-full h-full" />
+                            ))}
                           </div>
                         </div>
                       ))}
