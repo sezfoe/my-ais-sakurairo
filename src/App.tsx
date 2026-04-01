@@ -333,7 +333,17 @@ export default function App() {
           }
           /* Slightly smaller notes for print to ensure fit */
           .text-base, .md\:text-lg {
-            font-size: 14px !important;
+            font-size: 13px !important; /* Further reduced to ensure fit */
+            letter-spacing: -0.05em !important; /* Tighten characters */
+          }
+          /* Ensure the beat container itself can shrink */
+          .Beat_container, .flex.items-center.gap-0\.5 {
+            gap: 1px !important; /* Reduce gap between beats */
+          }
+          /* Force notes to stay in one line and not overflow */
+          span.relative.inline-flex {
+            width: auto !important;
+            min-width: 0.8em !important;
           }
           /* Hide scrollbars and ensure content doesn't overflow */
           .custom-scrollbar {
