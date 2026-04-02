@@ -213,7 +213,10 @@ const ScoreView: React.FC<ScoreViewProps> = ({ scoreData, onBack }) => {
         @media print {
           @page {
             size: A4 portrait;
-            margin: 15mm 10mm;
+            margin: 10mm 10mm;
+          }
+          * {
+            box-sizing: border-box !important;
           }
           body {
             background-color: white !important;
@@ -229,8 +232,8 @@ const ScoreView: React.FC<ScoreViewProps> = ({ scoreData, onBack }) => {
             margin: 0 !important;
           }
           h1 {
-            font-size: 28pt !important;
-            margin-bottom: 1rem !important;
+            font-size: 22pt !important;
+            margin-bottom: 0.5rem !important;
             color: black !important;
           }
           .grid-cols-8 {
@@ -239,34 +242,55 @@ const ScoreView: React.FC<ScoreViewProps> = ({ scoreData, onBack }) => {
             width: 100% !important;
             min-width: 0 !important;
             border-bottom: none !important;
+            border-top: 1px solid black !important;
           }
           .relative.flex.items-center.border-r.border-black {
             width: 100% !important;
             min-width: 0 !important;
             overflow: hidden !important;
-            padding: 4px 2px !important;
+            padding: 2px 1px !important;
+            height: 32px !important;
           }
+          /* Fix for notation overflow */
           .text-base, .md\:text-lg {
-            font-size: 11pt !important;
-            letter-spacing: -0.02em !important;
+            font-size: 9pt !important;
+            letter-spacing: -0.05em !important;
             white-space: nowrap !important;
             display: inline-flex !important;
           }
-          .flex.items-center.gap-0\.5 {
-            gap: 1px !important;
+          .relative.inline-flex.items-center.justify-center.w-\[1em\] {
+            width: 0.85em !important;
           }
-          .min-w-\[32px\], .md\:min-w-\[36px\] {
+          .flex.items-center.gap-0\.5 {
+            gap: 0px !important;
+          }
+          .min-w-\[32px\], .md\:min-w-\[36px\], .min-w-\[800px\] {
             min-width: 0 !important;
+          }
+          .h-10 {
+            height: 28px !important;
+          }
+          /* Adjust flat symbol position */
+          .absolute.-top-7 {
+            top: -1.2em !important;
+            font-size: 10pt !important;
           }
           .custom-scrollbar, .overflow-x-auto {
             overflow: visible !important;
           }
           .mt-12 {
-            margin-top: 1.5rem !important;
-            padding-top: 1rem !important;
+            margin-top: 1rem !important;
+            padding-top: 0.5rem !important;
           }
           .text-lg {
-            font-size: 12pt !important;
+            font-size: 10pt !important;
+          }
+          .p-6, .md\:p-10 {
+            padding: 0 !important;
+          }
+          .bg-white.rounded-2xl {
+            border: none !important;
+            box-shadow: none !important;
           }
         }
 
