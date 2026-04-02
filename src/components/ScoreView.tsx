@@ -242,7 +242,7 @@ const ScoreView: React.FC<ScoreViewProps> = ({ scoreData, onBack }) => {
             width: 100% !important;
             min-width: 0 !important;
             border-bottom: none !important;
-            border-top: 1px solid black !important;
+            border-top: none !important;
           }
           .relative.flex.items-center.border-r.border-black {
             width: 100% !important;
