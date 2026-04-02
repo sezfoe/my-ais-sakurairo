@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { SCORE_DATA as score001 } from "./score001";
 import { SCORE_DATA as score002 } from "./score002";
@@ -26,6 +26,23 @@ const SCORE_DATA: Record<string, any> = {
 export default function App() {
   const [view, setView] = useState<"home" | "score" | "blank">("home");
   const [selectedScore, setSelectedScore] = useState<string | null>(null);
+
+  // Keyboard shortcut listener
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Check if "t" or "T" is pressed
+      if (event.key.toLowerCase() === "t") {
+        handleGoToBlank();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    
+    // Cleanup listener on unmount
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   const handleSelect = (scoreKey: string) => {
     setSelectedScore(scoreKey);

@@ -22,17 +22,6 @@ const HomeView: React.FC<HomeViewProps> = ({ scoreList, onSelect, onGoToBlank })
             {scoreName}
           </motion.button>
         ))}
-        
-        <div className="h-[1px] bg-stone-200 my-2" />
-        
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={onGoToBlank}
-          className="px-6 py-4 bg-white text-black border border-stone-300 rounded-xl shadow-sm hover:bg-stone-50 transition-all text-base font-medium tracking-widest uppercase text-center"
-        >
-          TEST
-        </motion.button>
       </div>
     </div>
   );
