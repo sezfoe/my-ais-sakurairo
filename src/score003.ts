@@ -1,12 +1,8 @@
 // Score data with strict 3-beat structure and notation rules
 export const SCORE_DATA = {
   title: "アシタカせっ記",
-  beatsPerMeasure: 4,
   demoUrl: "https://www.youtube.com/watch?v=pWVO_odiZpM",
   sequence: ["a", "b", "c", "d", "e"],
-  sectionLabels: {
-    outro: "尾"
-  },
   notationMap: {
     "*": "。",
     "-": "，",
@@ -14,6 +10,10 @@ export const SCORE_DATA = {
     "5": "５", "6": "６", "7": "７", "8": "８", "9": "９",
     "b": "♭"
   },
+  sectionLabels: {
+    outro: "尾"
+  },    
+  beatsPerMeasure: 4,
   sections: {
     a: [
       "*,*,-二,五2",

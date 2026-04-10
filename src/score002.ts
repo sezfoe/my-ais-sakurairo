@@ -3,9 +3,6 @@ export const SCORE_DATA = {
   title: "桜色のワルツ",
   demoUrl: "https://youtu.be/DT5Bmm4MsKo",
   sequence: ["a", "b", "c", "d", "e", "f", "a", "b", "c", "d", "e", "outro"],
-  sectionLabels: {
-    outro: "尾"
-  },
   notationMap: {
     "*": "。",
     "-": "，",
@@ -13,6 +10,9 @@ export const SCORE_DATA = {
     "5": "５", "6": "６", "7": "７", "8": "８", "9": "９",
     "b": "♭"
   },
+  sectionLabels: {
+    outro: "尾"
+  },  
   sections: {
     a: [
       "四五",

@@ -3,15 +3,15 @@ export const SCORE_DATA = {
   title: "浜辺の歌",
   demoUrl: "",
   sequence: ["a","b","c","b"],
-  sectionLabels: {
-    outro: "尾"
-  },
   notationMap: {
     "*": "。",
     "-": "，",
     "0": "０", "1": "１", "2": "２", "3": "３", "4": "４",
     "5": "５", "6": "６", "7": "７", "8": "８", "9": "９",
     "b": "♭"
+  },
+  sectionLabels: {
+    outro: "尾"
   },
   sections: {
     a: [
