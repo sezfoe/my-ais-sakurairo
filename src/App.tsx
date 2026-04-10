@@ -16,14 +16,14 @@ import ScoreView from "./components/ScoreView";
 const SCORE_LIST = [
   "浜辺の歌",
   "桜色のワルツ",
-  "4/4版面測試"
+  "アシタカせっ記"
 ];
 
 // Map the display names to their respective data objects
 const SCORE_DATA: Record<string, any> = {
   "浜辺の歌": score001,
   "桜色のワルツ": score002,
-  "4/4版面測試": score003
+  "アシタカせっ記": score003
 };
 
 export default function App() {
