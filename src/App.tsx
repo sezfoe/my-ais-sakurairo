@@ -7,6 +7,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { SCORE_DATA as score001 } from "./score001";
 import { SCORE_DATA as score002 } from "./score002";
+import { SCORE_DATA as score003 } from "./score003";
 import TestView from "./components/TestView";
 import HomeView from "./components/HomeView";
 import ScoreView from "./components/ScoreView";
@@ -14,13 +15,15 @@ import ScoreView from "./components/ScoreView";
 // List of available scores (Button labels)
 const SCORE_LIST = [
   "浜辺の歌",
-  "桜色のワルツ"
+  "桜色のワルツ",
+  "4/4版面測試"
 ];
 
 // Map the display names to their respective data objects
 const SCORE_DATA: Record<string, any> = {
   "浜辺の歌": score001,
-  "桜色のワルツ": score002
+  "桜色のワルツ": score002,
+  "4/4版面測試": score003
 };
 
 export default function App() {

@@ -14,13 +14,19 @@ const parseMeasure = (measureStr: string): string[][] => {
     const notes: string[] = [];
     let i = 0;
     while (i < beatStr.length) {
-      let char = beatStr[i];
-      if (char === 'b' && i + 1 < beatStr.length) {
-        notes.push('b' + beatStr[i + 1]);
-        i += 2;
-      } else {
-        notes.push(char);
+      let currentNote = "";
+      // Collect all prefixes (b for flat, . for dot above)
+      while (i < beatStr.length && (beatStr[i] === 'b' || beatStr[i] === '.')) {
+        currentNote += beatStr[i];
         i++;
+      }
+      // Add the base note character
+      if (i < beatStr.length) {
+        currentNote += beatStr[i];
+        i++;
+      }
+      if (currentNote) {
+        notes.push(currentNote);
       }
     }
     return notes;
@@ -35,14 +41,20 @@ const Beat: React.FC<{ notes: string[]; notationMap: Record<string, string> }> =
       <div className="flex items-center gap-0 text-base md:text-lg font-medium leading-none">
         {notes.map((note, i) => {
           const hasFlat = note.includes('b');
-          const baseNote = note.replace('b', '');
+          const hasDotAbove = note.includes('.');
+          const baseNote = note.replace(/[b.]/g, '');
           const displayBase = toFullWidth(baseNote, notationMap);
           
           return (
             <span key={i} className="relative inline-flex items-center justify-center w-[1em]">
               {hasFlat && (
                 <span className="absolute -top-7 left-0 right-0 text-center font-normal text-lg md:text-xl">
-                  {notationMap["b"]}
+                  {notationMap["b"] || "♭"}
+                </span>
+              )}
+              {hasDotAbove && (
+                <span className="absolute -top-4 left-0 right-0 text-center font-bold text-sm md:text-base leading-none">
+                  ．
                 </span>
               )}
               {displayBase}
@@ -57,11 +69,11 @@ const Beat: React.FC<{ notes: string[]; notationMap: Record<string, string> }> =
   );
 };
 
-const Measure: React.FC<{ beats: string[][]; index: number; notationMap: Record<string, string> }> = ({ beats, notationMap }) => {
-  const isShortMeasure = beats.length < 3;
+const Measure: React.FC<{ beats: string[][]; index: number; notationMap: Record<string, string>; beatsPerMeasure: number }> = ({ beats, notationMap, beatsPerMeasure }) => {
+  const isShortMeasure = beats.length < (beatsPerMeasure / 2);
   
   return (
-    <div className={`relative flex items-center border-r border-black py-2 px-2 ${isShortMeasure ? 'justify-start' : 'justify-center'} w-full h-full`}>
+    <div className={`relative flex items-center border-r border-black py-2 px-1 ${isShortMeasure ? 'justify-start' : 'justify-center'} w-full h-full`}>
       <div className="flex items-center gap-0.5">
         {beats.map((beat, i) => (
           <Beat key={i} notes={beat} notationMap={notationMap} />
@@ -82,6 +94,11 @@ const ScoreView: React.FC<ScoreViewProps> = ({ scoreData, onBack }) => {
   const getSectionLabel = (key: string) => {
     return scoreData.sectionLabels[key as keyof typeof scoreData.sectionLabels] || key;
   };
+
+  const beatsPerMeasure = scoreData.beatsPerMeasure || 3;
+  const measuresPerRow = beatsPerMeasure === 4 ? 6 : 8; // 4拍子每行6小節，3拍子每行8小節
+  const gridClass = beatsPerMeasure === 4 ? "grid-cols-6" : "grid-cols-8";
+  const printGridClass = beatsPerMeasure === 4 ? "grid-cols-6" : "grid-cols-8";
 
   return (
     <div className="min-h-screen bg-[#f5f5f0] text-black font-serif selection:bg-stone-200 selection:text-stone-800">
@@ -134,7 +151,7 @@ const ScoreView: React.FC<ScoreViewProps> = ({ scoreData, onBack }) => {
                     }
                   } else {
                     currentMeasures.push(item);
-                    if (currentMeasures.length === 8) {
+                    if (currentMeasures.length === measuresPerRow) {
                       rows.push({ measures: [...currentMeasures] });
                       currentMeasures = [];
                     }
@@ -159,17 +176,18 @@ const ScoreView: React.FC<ScoreViewProps> = ({ scoreData, onBack }) => {
                     <div className="space-y-0 overflow-x-auto custom-scrollbar">
                       {rows.map((rowObj, rowIdx) => (
                         <div key={rowIdx} className="relative min-w-[800px] lg:min-w-full">
-                          <div className="grid grid-cols-8 border-l border-black">
+                          <div className={`grid ${gridClass} border-l border-black`}>
                             {rowObj.measures.map((measure, mIdx) => (
                               <Measure 
                                 key={mIdx} 
                                 beats={parseMeasure(measure)} 
-                                index={rowIdx * 8 + mIdx} 
+                                index={rowIdx * measuresPerRow + mIdx} 
                                 notationMap={scoreData.notationMap}
+                                beatsPerMeasure={beatsPerMeasure}
                               />
                             ))}
-                            {/* Fill empty space in the row if less than 8 measures */}
-                            {rowObj.measures.length < 8 && Array.from({ length: 8 - rowObj.measures.length }).map((_, i) => (
+                            {/* Fill empty space in the row if less than measuresPerRow */}
+                            {rowObj.measures.length < measuresPerRow && Array.from({ length: measuresPerRow - rowObj.measures.length }).map((_, i) => (
                               <div key={`empty-${i}`} className="border-r border-stone-200 w-full h-full" />
                             ))}
                           </div>
@@ -274,6 +292,11 @@ const ScoreView: React.FC<ScoreViewProps> = ({ scoreData, onBack }) => {
           .absolute.-top-7 {
             top: -1.2em !important;
             font-size: 10pt !important;
+          }
+          /* Adjust dot above position */
+          .absolute.-top-4 {
+            top: -0.7em !important;
+            font-size: 9pt !important;
           }
           .custom-scrollbar, .overflow-x-auto {
             overflow: visible !important;
