@@ -2,7 +2,7 @@
 export const SCORE_DATA = {
   title: "アシタカせっ記",
   demoUrl: "https://www.youtube.com/watch?v=pWVO_odiZpM",
-  sequence: ["a", "b", "c", "d", "e"],
+  sequence: ["a", "b", "c", "d"],
   notationMap: {
     "*": "。",
     "-": "，",
@@ -47,11 +47,19 @@ export const SCORE_DATA = {
       "二四,五,-五,七2",
       "4,-2,3,-1",
       "2,*,-二,五2",
+      "\n",
       "2,1,*,七六",
       "二四,五,-五,七2",
       "4,*,1,24",
       "1,24,七六,二四",
       "五,*,-二,五2",
+    ],
+    d: [
+      "2,1,*,七六",
+      "二四,五,-五,七2",
+      "4,*,1,24",
+      "1,24,76,24",
+      "5,*,*,*",
     ]
   }
 };
