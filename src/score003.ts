@@ -13,7 +13,7 @@ export const SCORE_DATA = {
   sectionLabels: {
     outro: "尾"
   },    
-  beatsPerMeasure: 4,
+  beats: 4,
   sections: {
     a: [
       "*,*,-二,五2",

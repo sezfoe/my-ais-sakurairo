@@ -33,12 +33,29 @@ const parseMeasure = (measureStr: string): string[][] => {
   });
 };
 
-const Beat: React.FC<{ notes: string[]; notationMap: Record<string, string> }> = ({ notes, notationMap }) => {
-  const isGrouped = notes.length >= 2;
+const Beat: React.FC<{ notes: string[]; notationMap: Record<string, string>; beatsCount: number }> = ({ notes, notationMap, beatsCount }) => {
+  const isEighthNote = notes.length >= 2 && notes.length < 4;
+  const isSixteenthNote = notes.length >= 4;
   
+  // Constant font size for 4/4, dynamic for others
+  const getFontSizeClass = () => {
+    if (beatsCount === 4) return "text-sm md:text-base"; 
+    if (notes.length >= 4) return "text-[11px] md:text-[13px]";
+    if (notes.length >= 3) return "text-[13px] md:text-[15px]";
+    return "text-base md:text-lg";
+  };
+
+  // Alignment logic based on symbol count for 4/4
+  const getAlignmentClass = () => {
+    if (beatsCount !== 4) return "flex items-center gap-0";
+    if (notes.length >= 4) return "grid grid-cols-4 w-full justify-items-center";
+    if (notes.length >= 2) return "grid grid-cols-2 w-full justify-items-center";
+    return "flex justify-center w-full";
+  };
+
   return (
-    <div className="relative flex flex-col items-center justify-center px-0.5 min-w-[32px] md:min-w-[36px] h-10 text-black">
-      <div className="flex items-center gap-0 text-base md:text-lg font-medium leading-none">
+    <div className={`relative flex flex-col items-center justify-center px-0 ${beatsCount === 4 ? 'w-full' : 'min-w-[32px] md:min-w-[36px]'} h-12 text-black`}>
+      <div className={`${getAlignmentClass()} ${getFontSizeClass()} font-medium leading-none`}>
         {notes.map((note, i) => {
           const hasFlat = note.includes('b');
           const hasDotAbove = note.includes('.');
@@ -46,7 +63,7 @@ const Beat: React.FC<{ notes: string[]; notationMap: Record<string, string> }> =
           const displayBase = toFullWidth(baseNote, notationMap);
           
           return (
-            <span key={i} className="relative inline-flex items-center justify-center w-[1em]">
+            <span key={i} className="relative inline-flex items-center justify-center w-[1.2em]">
               {hasFlat && (
                 <span className="absolute -top-7 left-0 right-0 text-center font-normal text-lg md:text-xl">
                   {notationMap["b"] || "♭"}
@@ -62,21 +79,27 @@ const Beat: React.FC<{ notes: string[]; notationMap: Record<string, string> }> =
           );
         })}
       </div>
-      {isGrouped && (
-        <div className="absolute bottom-1.5 left-0.5 right-0.5 h-[2px] bg-black rounded-full" />
+      {isEighthNote && (
+        <div className={`absolute bottom-2 ${beatsCount === 4 ? 'left-1 right-1' : 'left-0.5 right-0.5'} h-[1.5px] bg-black rounded-full`} />
+      )}
+      {isSixteenthNote && (
+        <div className={`absolute bottom-1.5 ${beatsCount === 4 ? 'left-1 right-1' : 'left-0.5 right-0.5'} flex flex-col gap-[1.5px]`}>
+          <div className="h-[1.5px] bg-black rounded-full" />
+          <div className="h-[1.5px] bg-black rounded-full" />
+        </div>
       )}
     </div>
   );
 };
 
-const Measure: React.FC<{ beats: string[][]; index: number; notationMap: Record<string, string>; beatsPerMeasure: number }> = ({ beats, notationMap, beatsPerMeasure }) => {
-  const isShortMeasure = beats.length < (beatsPerMeasure / 2);
+const Measure: React.FC<{ beats: string[][]; index: number; notationMap: Record<string, string>; beatsCount: number }> = ({ beats, notationMap, beatsCount }) => {
+  const isShortMeasure = beats.length < (beatsCount / 2);
   
   return (
-    <div className={`relative flex items-center border-r border-black py-2 px-1 ${isShortMeasure ? 'justify-start' : 'justify-center'} w-full h-full`}>
-      <div className="flex items-center gap-0.5">
+    <div className={`relative flex items-center border-r border-black py-2 px-0 ${isShortMeasure ? 'justify-start' : 'justify-center'} w-full h-full`}>
+      <div className={`flex items-center gap-0 ${beatsCount === 4 ? 'w-full grid grid-cols-4' : 'gap-0.5'}`}>
         {beats.map((beat, i) => (
-          <Beat key={i} notes={beat} notationMap={notationMap} />
+          <Beat key={i} notes={beat} notationMap={notationMap} beatsCount={beatsCount} />
         ))}
       </div>
     </div>
@@ -95,10 +118,10 @@ const ScoreView: React.FC<ScoreViewProps> = ({ scoreData, onBack }) => {
     return scoreData.sectionLabels[key as keyof typeof scoreData.sectionLabels] || key;
   };
 
-  const beatsPerMeasure = scoreData.beatsPerMeasure || 3;
-  const measuresPerRow = beatsPerMeasure === 4 ? 6 : 8; // 4拍子每行6小節，3拍子每行8小節
-  const gridClass = beatsPerMeasure === 4 ? "grid-cols-6" : "grid-cols-8";
-  const printGridClass = beatsPerMeasure === 4 ? "grid-cols-6" : "grid-cols-8";
+  const beatsCount = scoreData.beats || 3;
+  const measuresPerRow = beatsCount === 4 ? 4 : 8; // 4拍子每行4小節，3拍子每行8小節
+  const gridClass = beatsCount === 4 ? "grid-cols-4" : "grid-cols-8";
+  const printGridClass = beatsCount === 4 ? "grid-cols-4" : "grid-cols-8";
 
   return (
     <div className="min-h-screen bg-[#f5f5f0] text-black font-serif selection:bg-stone-200 selection:text-stone-800">
@@ -183,7 +206,7 @@ const ScoreView: React.FC<ScoreViewProps> = ({ scoreData, onBack }) => {
                                 beats={parseMeasure(measure)} 
                                 index={rowIdx * measuresPerRow + mIdx} 
                                 notationMap={scoreData.notationMap}
-                                beatsPerMeasure={beatsPerMeasure}
+                                beatsCount={beatsCount}
                               />
                             ))}
                             {/* Fill empty space in the row if less than measuresPerRow */}
@@ -262,6 +285,35 @@ const ScoreView: React.FC<ScoreViewProps> = ({ scoreData, onBack }) => {
             border-bottom: none !important;
             border-top: none !important;
           }
+          .grid-cols-4 {
+            display: grid !important;
+            grid-template-columns: repeat(4, 25%) !important;
+            width: 100% !important;
+            min-width: 0 !important;
+            border-bottom: none !important;
+            border-top: none !important;
+          }
+          .w-full.grid.grid-cols-4 {
+            display: grid !important;
+            grid-template-columns: repeat(4, 25%) !important;
+            width: 100% !important;
+          }
+          .grid.grid-cols-2.w-full.justify-items-center {
+            display: grid !important;
+            grid-template-columns: repeat(2, 50%) !important;
+            width: 100% !important;
+          }
+          .relative.flex.flex-col.items-center.justify-center.px-0.w-full {
+            width: 100% !important;
+            padding: 0 !important;
+            height: 36px !important;
+          }
+          .flex.items-center.w-full.justify-around {
+            display: flex !important;
+            justify-content: space-around !important;
+            width: 100% !important;
+            font-size: 10pt !important;
+          }
           .relative.flex.items-center.border-r.border-black {
             width: 100% !important;
             min-width: 0 !important;
@@ -297,6 +349,14 @@ const ScoreView: React.FC<ScoreViewProps> = ({ scoreData, onBack }) => {
           .absolute.-top-4 {
             top: -0.7em !important;
             font-size: 9pt !important;
+          }
+          /* Double underline for 1/16 notes in print */
+          .absolute.bottom-1.left-0\\.5.right-0\\.5.flex.flex-col {
+            bottom: 2px !important;
+            gap: 1px !important;
+          }
+          .absolute.bottom-1.left-0\\.5.right-0\\.5.flex.flex-col div {
+            height: 1px !important;
           }
           .custom-scrollbar, .overflow-x-auto {
             overflow: visible !important;
