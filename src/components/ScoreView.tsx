@@ -39,7 +39,7 @@ const Beat: React.FC<{ notes: string[]; notationMap: Record<string, string>; bea
   
   // Constant font size for 4/4, dynamic for others
   const getFontSizeClass = () => {
-    if (beatsCount === 4) return "text-sm md:text-base"; 
+    if (beatsCount === 4) return "text-base md:text-lg"; 
     if (notes.length >= 4) return "text-[11px] md:text-[13px]";
     if (notes.length >= 3) return "text-[13px] md:text-[15px]";
     return "text-base md:text-lg";
