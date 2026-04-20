@@ -60,7 +60,11 @@ const Beat: React.FC<{ notes: string[]; notationMap: Record<string, string>; bea
           const hasFlat = note.includes('b');
           const hasDotAbove = note.includes('.');
           const baseNote = note.replace(/[b.]/g, '');
-          const displayBase = toFullWidth(baseNote, notationMap);
+          
+          // Logic for consecutive '-' characters: 
+          // if current is '-' and previous was also '-', show as space
+          const isSecondDash = baseNote === '-' && i > 0 && notes[i-1].replace(/[b.]/g, '') === '-';
+          const displayBase = isSecondDash ? "　" : toFullWidth(baseNote, notationMap);
           
           return (
             <span key={i} className="relative inline-flex items-center justify-center w-[1.2em]">
