@@ -83,17 +83,17 @@ const Beat: React.FC<{ notes: string[]; notationMap: Record<string, string>; bea
         <div className={`absolute bottom-2 ${beatsCount === 4 ? 'left-1 right-1' : 'left-0.5 right-0.5'} h-[1.5px] bg-black rounded-full`} />
       )}
       {isSixteenthNote && (
-        <div className={`absolute bottom-1.5 ${beatsCount === 4 ? 'left-1 right-1' : 'left-0.5 right-0.5'} flex flex-col gap-[1.5px]`}>
-          <div className="h-[1.5px] bg-black rounded-full" />
-          <div className="h-[1.5px] bg-black rounded-full" />
-        </div>
+        <>
+          <div className={`absolute bottom-2 ${beatsCount === 4 ? 'left-1 right-1' : 'left-0.5 right-0.5'} h-[1.5px] bg-black rounded-full`} />
+          <div className={`absolute bottom-1 ${beatsCount === 4 ? 'left-1 right-1' : 'left-0.5 right-0.5'} h-[1.5px] bg-black rounded-full`} />
+        </>
       )}
     </div>
   );
 };
 
 const Measure: React.FC<{ beats: string[][]; index: number; notationMap: Record<string, string>; beatsCount: number }> = ({ beats, notationMap, beatsCount }) => {
-  const isShortMeasure = beats.length < (beatsCount / 2);
+  const isShortMeasure = beats.length < beatsCount;
   
   return (
     <div className={`relative flex items-center border-r border-black py-2 px-0 ${isShortMeasure ? 'justify-start' : 'justify-center'} w-full h-full`}>
@@ -158,7 +158,7 @@ const ScoreView: React.FC<ScoreViewProps> = ({ scoreData, onBack }) => {
           className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden"
         >
           <div className="p-6 md:p-10">
-            <div className="space-y-5">
+            <div className="space-y-1">
               {sectionsToRender.map((sectionKey) => {
                 const currentSection = scoreData.sections[sectionKey as keyof typeof scoreData.sections];
                 
@@ -187,10 +187,10 @@ const ScoreView: React.FC<ScoreViewProps> = ({ scoreData, onBack }) => {
                 }
 
                 return (
-                  <div key={sectionKey} className="space-y-2">
+                  <div key={sectionKey} className="space-y-1">
                     {/* Section Header */}
                     <div className="flex items-center gap-4">
-                      <span className="text-2xl font-bold text-black uppercase font-serif">
+                      <span className="text-xl font-bold text-black uppercase font-serif">
                         {getSectionLabel(sectionKey)}
                       </span>
                       <div className="h-[1px] flex-1 bg-stone-100" />
