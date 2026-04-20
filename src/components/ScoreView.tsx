@@ -154,7 +154,7 @@ const ScoreView: React.FC<ScoreViewProps> = ({ scoreData, onBack }) => {
       </header>
 
       {/* Score Area - All Sections in One Block */}
-      <main className="max-w-[1440px] mx-auto px-4 md:px-6 pb-20">
+      <main className="max-w-[1600px] mx-auto px-2 md:px-4 pb-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
