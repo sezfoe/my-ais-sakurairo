@@ -150,14 +150,14 @@ const ScoreView: React.FC<ScoreViewProps> = ({ scoreData, onBack }) => {
       </header>
 
       {/* Score Area - All Sections in One Block */}
-      <main className="max-w-7xl mx-auto px-4 md:px-6 pb-20">
+      <main className="max-w-[1440px] mx-auto px-4 md:px-6 pb-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden"
         >
-          <div className="p-4 md:p-6">
+          <div className="p-2 md:p-4">
             <div className="space-y-1">
               {sectionsToRender.map((sectionKey) => {
                 const currentSection = scoreData.sections[sectionKey as keyof typeof scoreData.sections];
