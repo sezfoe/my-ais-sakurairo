@@ -130,7 +130,7 @@ const ScoreView: React.FC<ScoreViewProps> = ({ scoreData, onBack }) => {
   return (
     <div className="min-h-screen bg-[#f5f5f0] text-black font-serif selection:bg-stone-200 selection:text-stone-800">
       {/* Header */}
-      <header className="max-w-5xl mx-auto pt-10 pb-6 px-6">
+      <header className="max-w-[1600px] mx-auto pt-10 pb-6 px-4 md:px-6">
         <div className="relative flex items-center justify-center">
           <button 
             onClick={onBack}
@@ -150,6 +150,12 @@ const ScoreView: React.FC<ScoreViewProps> = ({ scoreData, onBack }) => {
               {scoreData.title}
             </h1>
           </motion.div>
+
+          {(scoreData as any).key && (
+            <div className="absolute right-4 md:right-6 bottom-0 text-lg md:text-xl font-normal text-black pb-1">
+              {(scoreData as any).key}
+            </div>
+          )}
         </div>
       </header>
 

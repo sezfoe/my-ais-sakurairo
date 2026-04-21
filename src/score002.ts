@@ -1,6 +1,7 @@
 // Score data with strict 3-beat structure and notation rules
 export const SCORE_DATA = {
   title: "桜色のワルツ",
+  key: "六本",
   demoUrl: "https://youtu.be/DT5Bmm4MsKo",
   sequence: ["a", "b", "c", "d", "e", "f", "a", "b", "c", "d", "e", "outro"],
   notationMap: {
