@@ -37,24 +37,24 @@ const Beat: React.FC<{ notes: string[]; notationMap: Record<string, string>; bea
   const isEighthNote = notes.length >= 2 && notes.length < 4;
   const isSixteenthNote = notes.length >= 4;
   
-  // Constant font size for 4/4, dynamic for others
+  // Constant font size for 3/4 and 4/4, dynamic for others
   const getFontSizeClass = () => {
-    if (beatsCount === 4) return "text-base md:text-lg"; 
+    if (beatsCount === 4 || beatsCount === 3) return "text-base md:text-lg"; 
     if (notes.length >= 4) return "text-[11px] md:text-[13px]";
     if (notes.length >= 3) return "text-[13px] md:text-[15px]";
     return "text-base md:text-lg";
   };
 
-  // Alignment logic based on symbol count for 4/4
+  // Alignment logic based on symbol count for 3/4 and 4/4
   const getAlignmentClass = () => {
-    if (beatsCount !== 4) return "flex items-center gap-0";
+    if (beatsCount !== 4 && beatsCount !== 3) return "flex items-center gap-0";
     if (notes.length >= 4) return "grid grid-cols-4 w-full justify-items-center";
     if (notes.length >= 2) return "grid grid-cols-2 w-full justify-items-center";
     return "flex justify-center w-full";
   };
 
   return (
-    <div className={`relative flex flex-col items-center justify-center px-0 ${beatsCount === 4 ? 'w-full' : 'min-w-[32px] md:min-w-[36px]'} h-12 text-black`}>
+    <div className={`relative flex flex-col items-center justify-center px-0 ${(beatsCount === 4 || beatsCount === 3) ? 'w-full' : 'min-w-[32px] md:min-w-[36px]'} h-12 text-black`}>
       <div className={`${getAlignmentClass()} ${getFontSizeClass()} font-medium leading-none`}>
         {notes.map((note, i) => {
           const hasFlat = note.includes('b');
@@ -101,7 +101,7 @@ const Measure: React.FC<{ beats: string[][]; index: number; notationMap: Record<
   
   return (
     <div className={`relative flex items-center border-r border-black py-2 px-0 ${isShortMeasure ? 'justify-start' : 'justify-center'} w-full h-full`}>
-      <div className={`flex items-center gap-0 ${beatsCount === 4 ? 'w-full grid grid-cols-4' : 'gap-0.5'}`}>
+      <div className={`grid gap-0 w-full ${beatsCount === 4 ? 'grid-cols-4' : (beatsCount === 3 ? 'grid-cols-3' : 'flex items-center')}`}>
         {beats.map((beat, i) => (
           <Beat key={i} notes={beat} notationMap={notationMap} beatsCount={beatsCount} />
         ))}
