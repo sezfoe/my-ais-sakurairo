@@ -84,12 +84,12 @@ const Beat: React.FC<{ notes: string[]; notationMap: Record<string, string>; bea
         })}
       </div>
       {isEighthNote && (
-        <div className={`absolute bottom-2 ${(beatsCount === 4 || beatsCount === 3) ? 'left-2 right-2' : 'left-0.5 right-0.5'} h-[1.5px] bg-black rounded-full`} />
+        <div className={`absolute bottom-2 ${beatsCount === 4 ? 'left-2 right-2' : (beatsCount === 3 ? 'left-1 right-1' : 'left-0.5 right-0.5')} h-[1.5px] bg-black rounded-full`} />
       )}
       {isSixteenthNote && (
         <>
-          <div className={`absolute bottom-2 ${(beatsCount === 4 || beatsCount === 3) ? 'left-2 right-2' : 'left-0.5 right-0.5'} h-[1.5px] bg-black rounded-full`} />
-          <div className={`absolute bottom-1 ${(beatsCount === 4 || beatsCount === 3) ? 'left-2 right-2' : 'left-0.5 right-0.5'} h-[1.5px] bg-black rounded-full`} />
+          <div className={`absolute bottom-2 ${beatsCount === 4 ? 'left-2 right-2' : (beatsCount === 3 ? 'left-1 right-1' : 'left-0.5 right-0.5')} h-[1.5px] bg-black rounded-full`} />
+          <div className={`absolute bottom-1 ${beatsCount === 4 ? 'left-2 right-2' : (beatsCount === 3 ? 'left-1 right-1' : 'left-0.5 right-0.5')} h-[1.5px] bg-black rounded-full`} />
         </>
       )}
     </div>
